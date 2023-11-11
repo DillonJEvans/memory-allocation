@@ -7,6 +7,7 @@
 
 #include "memory_block.h" // MemoryBlock
 
+// A linked list of MemoryBlocks.
 typedef struct memory_pool
 {
   MemoryBlock *head;
@@ -25,7 +26,10 @@ MemoryPool *CreateMemoryPool(int size);
 // Frees the memory pool.
 void FreeMemoryPool(MemoryPool *pool);
 
-void PrintMemoryPoolByByte(const MemoryPool *pool, const char *freeString);
+// Prints the memory pool one byte at a time.
+// If a byte is allocated, the name of it's process will be printed.
+// If a byte is free, `freeProcess` will be printed.
+void PrintMemoryPoolByByte(const MemoryPool *pool, const char *freeProcess);
 
 // void PrintMemoryPoolByBlock(const MemoryPool *pool);
 

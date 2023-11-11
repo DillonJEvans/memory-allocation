@@ -18,6 +18,7 @@ MemoryPool *CreateMemoryPool(int size)
 void FreeMemoryPool(MemoryPool *pool)
 {
   if (pool == NULL) return;
+  // Free every block in the pool.
   MemoryBlock *current = pool->head;
   MemoryBlock *next;
   while (current)
@@ -29,15 +30,23 @@ void FreeMemoryPool(MemoryPool *pool)
   free(pool);
 }
 
-void PrintMemoryPoolByByte(const MemoryPool *pool, const char *freeString)
+void PrintMemoryPoolByByte(const MemoryPool *pool, const char *freeProcess)
 {
-  MemoryBlock *current = pool->head;
-  while (current)
+  for (MemoryBlock *current = pool->head; current; current = current->next)
   {
-    const char *s = (current->process ? current->process : freeString);
+    // Determine the name of the process to print.
+    const char *process;
+    if (current->process)
+    {
+      process = current->process;
+    }
+    else
+    {
+      process = freeProcess;
+    }
     for (int byte = 0; byte < current->size; byte++)
     {
-      fputs(s, stdout);
+      fputs(process, stdout);
     }
   }
   fputc('\n', stdout);
