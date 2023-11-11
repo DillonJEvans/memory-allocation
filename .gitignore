@@ -1,0 +1,10 @@
+# Ignore executables and other files without extensions (excluding Makefile).
+*
+*.out
+!/**/
+!*.*
+!Makefile
+
+# Ignore object files and the bin directory.
+*.o
+bin
