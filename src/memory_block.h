@@ -4,6 +4,7 @@
 #include <stdlib.h> // malloc, free
 #include <string.h> // strdup
 
+// A block of memory. Meant to be used as a node in a linked list of blocks.
 typedef struct memory_block
 {
   int size;                  // The size in bytes of the block.
