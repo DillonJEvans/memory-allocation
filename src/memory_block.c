@@ -40,6 +40,40 @@ void PrintMemoryPool(const MemoryBlock *head)
   fputc('\n', stdout);
 }
 
+void AllocateMemoryBlock(MemoryBlock *block, int size, char process)
+{
+  // If the block is the perfect size, switch it from being free to
+  // being allocated and then coalesce.
+  if (block->size == size)
+  {
+    block->process = process;
+    CoalesceMemoryBlock(block);
+    return;
+  }
+  // If the block isn't the perfect size but the previous block is allocated to `process`,
+  // then shift `size` bytes over to the previous block, no coalescing needed.
+  if (block->prev && block->prev->process == process)
+  {
+    block->prev->size += size;
+    block->size -= size;
+    return;
+  }
+  // If the block isn't the perfect size and the previous block is not allocated to `process`,
+  // split the block into two separate blocks. No coalescing needed.
+  MemoryBlock *freeBlock = malloc(sizeof(*freeBlock));
+  freeBlock->size = block->size - size;
+  freeBlock->process = FREE_BLOCK;
+  freeBlock->prev = block;
+  freeBlock->next = block->next;
+  block->next = freeBlock;
+  if (freeBlock->next)
+  {
+    freeBlock->next->prev = freeBlock;
+  }
+  block->size = size;
+  block->process = process;
+}
+
 MemoryBlock *FreeProcess(MemoryBlock *head, char process)
 {
   for (MemoryBlock *current = head; current; current = current->next)

@@ -27,6 +27,8 @@ void FreeMemoryPool(MemoryBlock *head);
 // Prints the memory pool.
 void PrintMemoryPool(const MemoryBlock *head);
 
+void AllocateMemoryBlock(MemoryBlock *block, int size, char process);
+
 // Frees all memory blocks allocated to `process`.
 // Returns the new head of the memory pool.
 MemoryBlock *FreeProcess(MemoryBlock *head, char process);
