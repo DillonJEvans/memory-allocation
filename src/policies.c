@@ -1,44 +1,63 @@
 #include "policies.h"
 
-MemoryBlock *FirstFit(MemoryBlock *head, int size)
+char *FirstFit(char *pool, int size)
 {
-  for (MemoryBlock *current = head; current; current = current->next)
+  char *block = pool;
+  int blockSize = 0;
+  while (block && blockSize < size)
   {
-    if (current->process != FREE_BLOCK) continue;
-    if (current->size >= size)
-    {
-      return current;
-    }
+    block = NextFreeBlock(block + blockSize, &blockSize);
   }
-  return NULL;
+  return block;
 }
 
-MemoryBlock *BestFit(MemoryBlock *head, int size)
+char *BestFit(char *pool, int size)
 {
-  MemoryBlock *best = NULL;
-  for (MemoryBlock *current = head; current; current = current->next)
+  char *best = NULL;
+  int bestSize = POOL_SIZE + 1;
+  char *block = pool;
+  int blockSize = 0;
+  while (block)
   {
-    if (current->process != FREE_BLOCK) continue;
-    if (current->size < size) continue;
-    if (!best || (current->size < best->size))
+    block = NextFreeBlock(block + blockSize, &blockSize);
+    if (blockSize >= size && blockSize < bestSize)
     {
-      best = current;
+      best = block;
     }
   }
   return best;
 }
 
-MemoryBlock *WorstFit(MemoryBlock *head, int size)
+char *WorstFit(char *pool, int size)
 {
-  MemoryBlock *worst = NULL;
-  for (MemoryBlock *current = head; current; current = current->next)
+  char *worst = NULL;
+  int worstSize = 0;
+  char *block = pool;
+  int blockSize = 0;
+  while (block)
   {
-    if (current->process != FREE_BLOCK) continue;
-    if (current->size < size) continue;
-    if (!worst || (current->size > worst->size))
+    block = NextFreeBlock(block + blockSize, &blockSize);
+    if (blockSize >= size && blockSize > worstSize)
     {
-      worst = current;
+      worst = block;
     }
   }
   return worst;
+}
+
+char *NextFreeBlock(char *pool, int *size)
+{
+  // Find the base of the next free block.
+  int base;
+  for (base = 0; pool[base] && pool[base] != FREE_BYTE; base++);
+  // If a free block could not be found, return NULL.
+  if (!pool[base]) return NULL;
+  // Determine the size of the free block.
+  int blockSize;
+  for (blockSize = 0;
+       pool[base + blockSize] && pool[base + blockSize] == FREE_BYTE;
+       blockSize++);
+  // Set *size to the size and return the base of the free block.
+  *size = blockSize;
+  return pool + base;
 }

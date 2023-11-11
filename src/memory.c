@@ -1,18 +1,17 @@
 #include "policies.h"
-#include "memory_block.h"
+#include "memory_pool.h"
 
 int main(/* int argc, const char *argv[] */)
 {
-  MemoryBlock *head = CreateMemoryPool(80);
-  PrintMemoryPool(head);
-  MemoryBlock *block = FirstFit(head, 10);
+  char pool[POOL_SIZE + 1];
+  FreeMemoryPool(pool);
+  PrintMemoryPool(pool);
+  char *block = FirstFit(pool, 10);
   AllocateMemoryBlock(block, 10, 'A');
-  PrintMemoryPool(head);
-  block = FirstFit(head, 10);
+  block = FirstFit(pool, 10);
   AllocateMemoryBlock(block, 10, 'B');
-  PrintMemoryPool(head);
-  head = FreeProcess(head, 'A');
-  PrintMemoryPool(head);
-  FreeMemoryPool(head);
+  PrintMemoryPool(pool);
+  FreeProcess(pool, 'A');
+  PrintMemoryPool(pool);
   return 0;
 }
