@@ -1,11 +1,10 @@
-#include "memory_pool.h"
+#include "policies.h"
+#include "memory_block.h"
 
 int main(/* int argc, const char *argv[] */)
 {
-  MemoryPool *pool = CreateMemoryPool(80);
-  PrintMemoryPoolByByte(pool, ".");
-  pool->head->next = CreateMemoryBlock(10, "A");
-  PrintMemoryPoolByByte(pool, ".");
-  FreeMemoryPool(pool);
+  MemoryBlock *head = CreateMemoryPool(80);
+  PrintMemoryPool(head);
+  FreeMemoryPool(head);
   return 0;
 }
