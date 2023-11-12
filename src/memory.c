@@ -1,19 +1,12 @@
-#include "policies.h"
+#include <stdio.h>
+
+#include "commands.h"
 #include "memory_pool.h"
 
-int main(/* int argc, const char *argv[] */)
+int main()
 {
   char pool[POOL_SIZE + 1];
   InitializeMemoryPool(pool);
-  PrintMemoryPool(pool);
-  char *block = FirstFit(pool, 10);
-  AllocateMemoryBlock(block, 10, 'A');
-  block = FirstFit(pool, 10);
-  AllocateMemoryBlock(block, 10, 'B');
-  PrintMemoryPool(pool);
-  FreeProcess(pool, 'A');
-  PrintMemoryPool(pool);
-  CompactMemoryPool(pool);
-  PrintMemoryPool(pool);
+  while (GetAndExecuteCommand(pool, stdin));
   return 0;
 }

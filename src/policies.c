@@ -23,6 +23,7 @@ char *BestFit(char *pool, int size)
     if (blockSize >= size && blockSize < bestSize)
     {
       best = block;
+      bestSize = blockSize;
     }
   }
   return best;
@@ -40,6 +41,7 @@ char *WorstFit(char *pool, int size)
     if (blockSize >= size && blockSize > worstSize)
     {
       worst = block;
+      worstSize = blockSize;
     }
   }
   return worst;

@@ -7,10 +7,13 @@ clean:
 	rm -rf memory
 	rm -rf bin/*
 
-memory: bin/memory.o bin/policies.o bin/memory_pool.o
+memory: bin/memory.o bin/commands.o bin/policies.o bin/memory_pool.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 bin/memory.o: src/memory.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+bin/commands.o: src/commands.c src/commands.h
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 bin/policies.o: src/policies.c src/policies.h
