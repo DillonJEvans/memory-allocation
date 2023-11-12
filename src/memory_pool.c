@@ -1,6 +1,6 @@
 #include "memory_pool.h"
 
-void FreeMemoryPool(char *pool)
+void InitializeMemoryPool(char *pool)
 {
   memset(pool, FREE_BYTE, POOL_SIZE);
   pool[POOL_SIZE] = '\0';
@@ -19,6 +19,26 @@ void FreeProcess(char *pool, char process)
     {
       pool[i] = FREE_BYTE;
     }
+  }
+}
+
+void CompactMemoryPool(char *pool)
+{
+  // Move all the allocated bytes to the front of the pool.
+  int freeByte = 0;
+  for (int i = 0; i < POOL_SIZE; i++)
+  {
+    if (pool[i] != FREE_BYTE)
+    {
+      pool[freeByte] = pool[i];
+      freeByte++;
+    }
+  }
+  // Free all of the remaining bytes.
+  while (freeByte < POOL_SIZE)
+  {
+    pool[freeByte] = FREE_BYTE;
+    freeByte++;
   }
 }
 

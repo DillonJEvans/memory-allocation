@@ -4,7 +4,7 @@
 int main(/* int argc, const char *argv[] */)
 {
   char pool[POOL_SIZE + 1];
-  FreeMemoryPool(pool);
+  InitializeMemoryPool(pool);
   PrintMemoryPool(pool);
   char *block = FirstFit(pool, 10);
   AllocateMemoryBlock(block, 10, 'A');
@@ -12,6 +12,8 @@ int main(/* int argc, const char *argv[] */)
   AllocateMemoryBlock(block, 10, 'B');
   PrintMemoryPool(pool);
   FreeProcess(pool, 'A');
+  PrintMemoryPool(pool);
+  CompactMemoryPool(pool);
   PrintMemoryPool(pool);
   return 0;
 }
