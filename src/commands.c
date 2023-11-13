@@ -2,6 +2,7 @@
 
 bool GetAndExecuteCommand(char *pool, FILE *stream)
 {
+  bool stillRunning = true;
   char command;
   fscanf(stream, "%c", &command);
   switch (command)
@@ -16,7 +17,7 @@ bool GetAndExecuteCommand(char *pool, FILE *stream)
       ExecuteShow(pool, stream);
       break;
     case 'R':
-      ExecuteRead(pool, stream);
+      stillRunning = ExecuteRead(pool, stream);
       break;
     case 'C':
       ExecuteCompact(pool, stream);
@@ -28,7 +29,7 @@ bool GetAndExecuteCommand(char *pool, FILE *stream)
       break;
   }
   while (fgetc(stream) != '\n');
-  return true;
+  return stillRunning;
 }
 
 void ExecuteAllocate(char *pool, FILE *stream)
@@ -74,10 +75,18 @@ void ExecuteShow(char *pool, FILE *stream)
   PrintMemoryPool(pool);
 }
 
-void ExecuteRead(char *pool, FILE *stream)
+bool ExecuteRead(char *pool, FILE *stream)
 {
-  UNUSED(pool);
-  UNUSED(stream);
+  bool stillRunning = true;
+  char filename[MAX_FILENAME_LEN + 1];
+  fscanf(stream, " %s", filename);
+  FILE *file = fopen(filename, "r");
+  while (stillRunning && !feof(file))
+  {
+    stillRunning = GetAndExecuteCommand(pool, file);
+  }
+  fclose(file);
+  return stillRunning;
 }
 
 void ExecuteCompact(char *pool, FILE *stream)
