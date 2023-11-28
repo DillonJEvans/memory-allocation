@@ -3,7 +3,7 @@
 #include "commands.h"
 #include "memory_pool.h"
 
-#define PROMPT ("command = ")
+#define PROMPT ("command> ")
 
 int main()
 {

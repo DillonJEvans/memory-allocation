@@ -1,23 +1,22 @@
 CC = gcc
-CFLAGS = -Wall -Wextra # -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 .PHONY: clean
+
+default: memory
 
 clean:
 	rm -rf memory
 	rm -rf bin/*
 
-memory: bin/memory.o bin/commands.o bin/policies.o bin/memory_pool.o
+memory: bin/memory.o bin/commands.o bin/policies.o bin/memory_pool.o | bin
 	$(CC) -o $@ $^ $(CFLAGS)
 
-bin/memory.o: src/memory.c
+bin/memory.o: src/memory.c | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-bin/commands.o: src/commands.c src/commands.h
+bin/%.o: src/%.c src/%.h | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-bin/policies.o: src/policies.c src/policies.h
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-bin/memory_pool.o: src/memory_pool.c src/memory_pool.h
-	$(CC) -c -o $@ $< $(CFLAGS)
+bin:
+	mkdir -p $@
